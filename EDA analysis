@@ -7,10 +7,26 @@ SELECT COLUMN_NAME, DATA_TYPE
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_NAME = 'airbnb';
 
-select distinct country from airbnb;
-
 -- Show structure of the table
 SELECT TOP 10 * FROM airbnb;
+
+select distinct country from airbnb;
+
+--Check for Missing Data
+SELECT
+  SUM(CASE WHEN host_name IS NULL OR host_name = '' THEN 1 ELSE 0 END) AS missing_host_name,
+  SUM(CASE WHEN price IS NULL THEN 1 ELSE 0 END) AS missing_price,
+  SUM(CASE WHEN neighbourhood_group IS NULL OR neighbourhood_group = '' THEN 1 ELSE 0 END) AS missing_neighbourhood_group
+FROM airbnb;
+
+
+--Basic Descriptive Statistics for Price
+SELECT
+  MIN(price) AS min_price,
+  MAX(price) AS max_price,
+  AVG(price) AS avg_price,
+  STDEV(price) AS stddev_price
+FROM airbnb;
 
 -- Count Total Listings
 SELECT COUNT(*) AS total_listings FROM airbnb;
@@ -21,6 +37,8 @@ FROM airbnb
 GROUP BY neighbourhood_group
 ORDER BY listing_count DESC;
 
+
+--What are the pricing trends across different neighborhoods?
 --Average Price by Neighborhood
 SELECT neighbourhood_group, AVG(price) AS avg_price
 FROM airbnb
@@ -50,20 +68,6 @@ FROM airbnb
 GROUP BY neighbourhood_group
 ORDER BY avg_reviews DESC;
 
---Check for Missing Data
-SELECT
-  SUM(CASE WHEN host_name IS NULL OR host_name = '' THEN 1 ELSE 0 END) AS missing_host_name,
-  SUM(CASE WHEN price IS NULL THEN 1 ELSE 0 END) AS missing_price,
-  SUM(CASE WHEN neighbourhood_group IS NULL OR neighbourhood_group = '' THEN 1 ELSE 0 END) AS missing_neighbourhood_group
-FROM airbnb;
-
---Basic Descriptive Statistics for Price
-SELECT
-  MIN(price) AS min_price,
-  MAX(price) AS max_price,
-  AVG(price) AS avg_price,
-  STDEV(price) AS stddev_price
-FROM airbnb;
 
 --Top Hosts (by Number of Listings)
 SELECT host_name, COUNT(*) AS listings
